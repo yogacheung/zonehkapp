@@ -1,9 +1,9 @@
 import { Platform, StatusBar, Dimensions, StyleSheet, View } from 'react-native';
 import { Ionicons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
-const apiserver = 'https://www.bakermode.com:4422/api/';
-const imgurl = 'https://bakermode.com:4422/images/';
-const ipstack = 'http://api.ipstack.com/';
+const apiserver = 'https://api.z-onehk.com/';
+const imglink = 'https://www.z-onehk.com/wp-content/uploads/';
+const imgurl = 'https://images.z-onhk.com/';
 
 const wWidth = Platform.OS === 'ios' ? Dimensions.get('window').width : Dimensions.get('screen').width;
 const wHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : Dimensions.get('screen').height - 20; //StatusBar.currentHeight;
@@ -24,8 +24,8 @@ export { MaterialCommunityIcons };
 
 // Server url
 export { apiserver };
+export { imglink };
 export { imgurl };
-export { ipstack };
 
 // Screen size
 export { wWidth };
