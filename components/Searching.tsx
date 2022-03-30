@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Platform, StyleSheet, View, Ionicons, FontAwesome, MaterialCommunityIcons, ipstack, wWidth, wHeight, barTop, iconPad, btmLocat, iconWidth } from "../GlobalVar";
+import { Platform, StyleSheet, View, Ionicons, FontAwesome, MaterialCommunityIcons, wWidth, wHeight, barTop, iconPad, btmLocat, iconWidth } from "../GlobalVar";
 import { TextInput, StatusBar, Dimensions } from 'react-native';
 
 // Searching Component
@@ -37,7 +37,14 @@ export default class Searching extends Component<any, any> {
           name='search'
           type='font-awesome'
           size={wWidth/15}      
-          onPress={() => this.props.navigation.navigate('SearchResult', {searchKey: search.searchKey, searchZip: search.searchZip})} /> */}        
+          onPress={() => this.props.navigation.navigate('SearchResult', {searchKey: search.searchKey, searchZip: search.searchZip})} /> */}
+        
+        {/* Order History button */}
+        <Ionicons style={styles.iconBtn}
+            name='options-outline'            
+            size={iconWidth}
+            color='black'
+            onPress={() => this.props.navigation.navigate('OrderHistory')} />  
       </View>
     );
   }
@@ -52,26 +59,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   search: {    
-    width: wWidth*0.65,
+    width: wWidth*0.7,
     color: 'black',    
     textAlign: 'left',
     paddingLeft: 10,
-    marginHorizontal: 5,
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderRadius: 15,
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 1
-    }
-  },
-  zip: {    
-    width: wWidth*0.2,
-    color: 'black',    
-    textAlign: 'center',
     marginHorizontal: 5,
     backgroundColor: '#ffffff',
     borderWidth: 1,
@@ -88,5 +79,12 @@ const styles = StyleSheet.create({
     flex: 1,    
     textAlign: 'center',    
     justifyContent: 'center',
-  }
+  },
+  iconBtn: {
+    flex : 1,
+    color: '#000',
+    textAlign: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: iconPad
+  },
 });

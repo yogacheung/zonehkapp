@@ -24,16 +24,6 @@ export default class MainMenu extends Component<any, any> {
           {/* Extra space for android */}
           {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-          {/* Account button */}
-          <FontAwesome style={styles.iconBtn}
-            name='user-circle'            
-            size={iconWidth}
-            color='balck'
-            onPress={() => this.props.navigation.navigate('Account')} />
-
-          {/* Extra space for android */}
-          {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
-
           {/* Order History button */}
           <Ionicons style={styles.iconBtn}
             name='cart-outline'            
@@ -54,6 +44,16 @@ export default class MainMenu extends Component<any, any> {
           {/* Extra space for android */}
           {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
           
+          {/* Account button */}
+          <FontAwesome style={styles.iconBtn}
+            name='user-circle'            
+            size={iconWidth}
+            color='balck'
+            onPress={() => this.props.navigation.navigate('Account')} />
+
+          {/* Extra space for android */}
+          {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+
           {/* Setting button */}
           <Ionicons style={styles.iconBtn}          
             name='settings-outline'            
@@ -73,18 +73,17 @@ const styles = StyleSheet.create({
     width: wWidth,
     flexDirection: 'row',
     textAlign: 'center',
-    justifyContent: 'center',
-    margin: 10,
-    padding: 5,
+    justifyContent: 'center',        
+    paddingBottom: 15,
     position: 'absolute',  
-    bottom: btmLocat,
+    bottom: 0,
     backgroundColor: '#fcfcfc'
   },
   iconBtn: {
     flex : 1,
-    color: '#FFFFFF',    
+    color: '#000',
     textAlign: 'center',
     justifyContent: 'center',
     paddingHorizontal: iconPad
-  }, 
+  },
 });

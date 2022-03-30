@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-nati
 
 import MainMenu from '../components/MainMenu';
 import Searching from '../components/Searching';
+import Feature from './Feature';
 
 // Home page
 export default class Home extends Component<any, any> {  
@@ -12,10 +13,10 @@ export default class Home extends Component<any, any> {
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           {/* Top - searching bar */}
-          <Searching navigation={this.props.navigation}/>          
+          <Searching navigation={this.props.navigation}/>
+          <Feature navigation={this.props.navigation}/>  
           {/* Bottome - menu */}
           <MainMenu navigation={this.props.navigation}/>
-          
         </View>
       </TouchableWithoutFeedback>
     );

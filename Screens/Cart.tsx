@@ -31,7 +31,7 @@ const Item = ({ item }: product) => (
   </View>
 );
 
-export default class Feature extends Component<any, any> { 
+export default class Cart extends Component<any, any> { 
   constructor(props: any) {
     super(props);
     this.state = {
@@ -72,8 +72,7 @@ export default class Feature extends Component<any, any> {
       <SafeAreaView style={styles.container}>
         <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />
         {/* List all food */}
-        <FlatList
-          showsVerticalScrollIndicator  = {false}
+        <FlatList 
           data = {this.state.resList}          
           renderItem = { ({ item }) =>
             <TouchableOpacity

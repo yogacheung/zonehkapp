@@ -4,6 +4,9 @@ import { HeaderBackButton } from '@react-navigation/elements';
 
 // Import Screen files
 import Home from './Screens/Home';
+import Product from './Screens/Product';
+import Account from './Screens/Account';
+import UserSignIn from './Screens/UserSignIn';
 
 // const options = ({{navigation}: {navigation: any}, {route}: {route: any}}) => ({
 //   headerLeft: <HeaderBackButton onPress={() => navigation.navigate('Home')} />
@@ -15,7 +18,20 @@ const AppNavigator = createStackNavigator(
     Home: {
       screen: Home,
       navigationOptions: {headerShown: false}
-    }
+    },
+    Product: {
+      screen: Product,
+      navigationOptions: ({ navigation }:any) => ({
+        title: navigation.state.params.title,
+      }),
+    },
+    Account: {
+      screen: Account      
+    },
+    UserSignIn: {
+      screen: UserSignIn,
+      navigationOptions: {headerShown: false}
+    },
   }, {
     initialRouteName: 'Home'
   }

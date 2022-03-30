@@ -7,7 +7,7 @@ const imgurl = 'https://images.z-onhk.com/';
 
 const wWidth = Platform.OS === 'ios' ? Dimensions.get('window').width : Dimensions.get('screen').width;
 const wHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : Dimensions.get('screen').height - 20; //StatusBar.currentHeight;
-const barTop = Platform.OS === 'ios' ? 40 : 0;
+const barTop = Platform.OS === 'ios' ? 5 : 0;
 
 const iconWidth = Platform.OS === 'ios' ? wWidth/8 : wWidth/8;
 const iconPad = Platform.OS === 'ios' ? wWidth/30 : wWidth/30;
