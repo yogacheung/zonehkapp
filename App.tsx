@@ -7,6 +7,7 @@ import Home from './Screens/Home';
 import Product from './Screens/Product';
 import Account from './Screens/Account';
 import UserSignIn from './Screens/UserSignIn';
+import Category from './Screens/Category';
 
 // const options = ({{navigation}: {navigation: any}, {route}: {route: any}}) => ({
 //   headerLeft: <HeaderBackButton onPress={() => navigation.navigate('Home')} />
@@ -24,6 +25,9 @@ const AppNavigator = createStackNavigator(
       navigationOptions: ({ navigation }:any) => ({
         title: navigation.state.params.title,
       }),
+    },
+    Category : {
+      screen: Category
     },
     Account: {
       screen: Account      

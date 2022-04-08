@@ -13,7 +13,7 @@ interface product {
     img: string;
     min_price: number;
     max_price: number;
-    rating_count: number;
+    rating_count: number;    
   }
 }
 
@@ -26,7 +26,7 @@ const Item = ({ item }: product) => (
     />
     <View style={styles.itemDetail}>    
     <Text style={styles.title}>{item.title}</Text>    
-    <Text style={styles.subtitile}>Price: HK${item.min_price}</Text>
+    <Text style={styles.subtitile}>HK${item.min_price}</Text>
     </View>    
   </View>
 );
@@ -35,7 +35,7 @@ export default class Feature extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isLoading: true,
+      isLoading: true,      
       resList: []
     }
   } 

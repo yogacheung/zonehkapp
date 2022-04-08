@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Platform, StyleSheet, View, Ionicons, FontAwesome, MaterialCommunityIcons, wWidth, wHeight, barTop, iconPad, btmLocat, iconWidth } from "../GlobalVar";
 import { TextInput, StatusBar, Dimensions } from 'react-native';
+import Category from '../Screens/Category';
 
 // Searching Component
 export default class Searching extends Component<any, any> {
   constructor(props: any) {
     super(props);    
     this.state = { 
-      isLoading: true,          
+      isLoading: true,      
       searchText: '',      
       err: null
     };
@@ -23,7 +24,13 @@ export default class Searching extends Component<any, any> {
     this.props.navigation.navigate('SearchResult', {searchKey: this.state.searchKey, searchZip: this.state.searchZip})
   }
 
-  componentDidMount() {    
+  updateShowCate = (s: boolean) => {
+    this.setState({showCate: s})
+    console.log(this.state.showCate);    
+  }
+
+  componentDidMount() {
+    // console.log(this.state.showCate);
   }
 
   render() {
@@ -38,13 +45,14 @@ export default class Searching extends Component<any, any> {
           type='font-awesome'
           size={wWidth/15}      
           onPress={() => this.props.navigation.navigate('SearchResult', {searchKey: search.searchKey, searchZip: search.searchZip})} /> */}
-        
-        {/* Order History button */}
+                
+        {/* Category Filter */}
         <Ionicons style={styles.iconBtn}
             name='options-outline'            
             size={iconWidth}
             color='black'
-            onPress={() => this.props.navigation.navigate('OrderHistory')} />  
+            onPress={() => this.props.navigation.navigate('Category')} />
+                      
       </View>
     );
   }

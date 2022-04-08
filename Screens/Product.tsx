@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { SafeAreaView, View, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Text, TextInput, StatusBar, Pressable, Modal, Platform, Alert } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { apiserver, imglink, wWidth, wHeight } from '../GlobalVar';
 import Loader from '../components/Loader';
@@ -12,6 +13,7 @@ export default class Product extends Component<any, any> {
       isLoading: true,
       id: this.props.navigation.state.params.id,
       info: null,
+      qty: 1
     }    
   }
 
@@ -25,6 +27,12 @@ export default class Product extends Component<any, any> {
         // console.log(this.state);  
       }      
     });
+  }
+
+  updateQty = (qty: number) => {
+    if(this.state.qty > 0){
+      this.setState({qty: this.state.qty+qty});
+    }    
   }
 
   componentDidMount() {
@@ -45,13 +53,22 @@ export default class Product extends Component<any, any> {
         <ScrollView>
           <Image style={styles.image} source={{uri: imglink+this.state.info.img}} />
           <View style={styles.infoContent}>
+            {/* Info */}
             <Text style={styles.title}>{this.state.info.title}</Text>
-            <Text style={styles.title}>Price: HK${this.state.info.min_price}</Text>
+            <Text style={styles.title}>HK${this.state.info.min_price}</Text>
             <Text style={styles.title}>Descripton:</Text>
             <ScrollView>
               <Text style={styles.title}>{this.state.info.content}</Text>
             </ScrollView>
 
+            {/* Quantity */}
+            <View style={styles.rowStyle}>
+              <AntDesign name="minuscircleo" size={30} color="black" onPress={() => this.state.qty > 1 ? this.setState({qty: this.state.qty-1}) : null} />
+              <TextInput style={styles.qty} value={this.state.qty.toString()} underlineColorAndroid='transparent'/>
+              <AntDesign name="pluscircleo" size={30} color="black" onPress={() => this.setState({qty: this.state.qty+1})} />
+            </View>
+
+            {/* Add To Cart Button */}
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
@@ -145,22 +162,7 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     flex: 1
-  },
-  modalView: {    
-    marginHorizontal: 20,
-    marginVertical: 100,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,    
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
+  },  
   textStyle: {
     fontSize: wWidth*0.05,
     fontWeight: "bold",
