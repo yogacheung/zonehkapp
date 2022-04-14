@@ -24,13 +24,7 @@ export default class Searching extends Component<any, any> {
     this.props.navigation.navigate('SearchResult', {searchKey: this.state.searchKey, searchZip: this.state.searchZip})
   }
 
-  updateShowCate = (s: boolean) => {
-    this.setState({showCate: s})
-    console.log(this.state.showCate);    
-  }
-
-  componentDidMount() {
-    // console.log(this.state.showCate);
+  componentDidMount() {    
   }
 
   render() {

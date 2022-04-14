@@ -83,6 +83,12 @@ export default class Cart extends Component<any, any> {
           }
           keyExtractor={item => item.id.toString()}         
         />
+
+        <View>
+          <Text>Total: </Text>
+          <Text>Checkout</Text>
+        </View>
+
         {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}        
       </SafeAreaView>
     );

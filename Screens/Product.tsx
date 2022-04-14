@@ -55,18 +55,24 @@ export default class Product extends Component<any, any> {
           <View style={styles.infoContent}>
             {/* Info */}
             <Text style={styles.title}>{this.state.info.title}</Text>
-            <Text style={styles.title}>HK${this.state.info.min_price}</Text>
+            <View style={styles.rowStyle}>
+              <Text style={styles.title}>HK${this.state.info.min_price}</Text>
+
+              {/* Quantity */}
+              <View style={{flex:1, alignItems: 'flex-end'}}>
+                <View style={styles.rowStyle}>
+                  <AntDesign name="minuscircleo" size={30} color="black" onPress={() => this.state.qty > 1 ? this.setState({qty: this.state.qty-1}) : null} />
+                  <TextInput style={styles.qty} value={this.state.qty.toString()} underlineColorAndroid='transparent'/>
+                  <AntDesign name="pluscircleo" size={30} color="black" onPress={() => this.setState({qty: this.state.qty+1})} />
+                </View>
+              </View>
+            </View>
             <Text style={styles.title}>Descripton:</Text>
             <ScrollView>
               <Text style={styles.title}>{this.state.info.content}</Text>
             </ScrollView>
 
-            {/* Quantity */}
-            <View style={styles.rowStyle}>
-              <AntDesign name="minuscircleo" size={30} color="black" onPress={() => this.state.qty > 1 ? this.setState({qty: this.state.qty-1}) : null} />
-              <TextInput style={styles.qty} value={this.state.qty.toString()} underlineColorAndroid='transparent'/>
-              <AntDesign name="pluscircleo" size={30} color="black" onPress={() => this.setState({qty: this.state.qty+1})} />
-            </View>
+            
 
             {/* Add To Cart Button */}
             <TouchableOpacity

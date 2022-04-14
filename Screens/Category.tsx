@@ -1,51 +1,82 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Text, TextInput, StatusBar, Pressable, Modal, Platform, Alert, TouchableHighlightBase } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { SafeAreaView, View, ScrollView, TouchableOpacity, StyleSheet, Text, TouchableHighlightBase } from 'react-native';
 import axios from 'axios';
-import { apiserver, imglink, wWidth, wHeight } from '../GlobalVar';
+import { apiserver, wWidth, wHeight } from '../GlobalVar';
+import Checkbox from 'expo-checkbox';
 
 export default class Category extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      showCate: this.props.showCate,   
-      catelist: []
+      isLoading: true,      
+      catelist: [],
+      checkedList: [],
     }
   }
 
-  updateCateStatus = (s: Boolean) => {
-    this.setState({showCate: s});
+  updateCheckedList = () => {
+    this.setState({checkedList: []});
+  }
+
+  updateIsChecked = (i: number, v: any) => {
+    // console.log(i, v);
+    let cate = this.state.catelist[i];    
+    cate.checked = v;
+    // console.log(cate);
+    this.state.catelist[i] = cate;
+    // console.log(this.state.catelist[i]);
+    this.categoryList();
+    // console.log(this.state.catelist);
   }
 
   categoryList = () => {
-    return (
-      <Text>List testing</Text>
-    );
+    if(this.state.catelist) {
+      return this.state.catelist.map((cate: any, i: number) => {                  
+        return (
+          <View style={styles.section}>
+            <Checkbox 
+              style={styles.checkbox}
+              value={Boolean(cate.checked)}
+              onValueChange={(v) => this.updateIsChecked(i,v)}              
+            />           
+            <Text key={i} style={styles.textStyle}>{cate.name}</Text>
+          </View>
+        );
+      });
+    }
   }
 
   getCategoryList = () => {
-    axios.get(apiserver+'getCategory')
+    axios.get(apiserver+'getcategory')
     .then(res => {
       // console.log(res);
       if(res.data.code === 200) {
-        this.setState({resList: res.data.list});
+        console.log(res.data.list);
+        this.setState({catelist: res.data.list});
       }
     });
   }
 
   componentDidMount = () => {
-    console.log(this.props);
+    // console.log(this.props);
+    if(this.state.isLoading) {
+      this.getCategoryList();  
+    }
   }
 
   render() {  
-    return(
-      <View style={styles.container}>                
-          <Text style={styles.title}>List: </Text>
-          
+    return(      
+      <View style={styles.container}>                          
+        <ScrollView>
           {this.categoryList()}
-          <Pressable onPress={() => this.updateCateStatus(!this.state.showCate)} >
-            <Text style={styles.textStyle}>Go</Text>
-          </Pressable>        
+
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            activeOpacity={0.5}
+            onPress={() => this.props.navigation.navigate('Home')}>
+            <Text style={styles.buttonTextStyle}>Filter</Text>
+          </TouchableOpacity>
+          </ScrollView>
       </View>
     )
   }
@@ -54,16 +85,40 @@ export default class Category extends Component<any, any> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: 99
+    backgroundColor: '#fff',
   },
   title: {    
     fontSize: wWidth*0.05,
     padding: 5,
   },
   textStyle: {
-    fontSize: wWidth*0.05,
-    fontWeight: "bold",
+    fontSize: wWidth*0.05,    
     textAlign: "center",
-    paddingTop: 20
-  }  
+    padding: 5
+  },
+  section: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  paragraph: {
+    fontSize: 15,
+    width: wWidth*0.25,
+  },
+  checkbox: {
+    margin: 8,
+  },
+  buttonStyle: {    
+    backgroundColor: '#fcfcfc',
+    borderWidth: 1,
+    color: '#FFFFFF',        
+    alignItems: 'center',
+    borderRadius: 30,    
+    marginVertical: 10,
+    marginBottom: 30,
+    marginHorizontal: 10,
+  },
+  buttonTextStyle: {
+    color: '#000000',    
+    fontSize: wWidth*0.08, 
+  },
 });

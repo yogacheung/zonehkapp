@@ -72,7 +72,12 @@ export default class Account extends Component<any, any> {
               onPress={() => this.props.navigation.navigate('EditAccount', {userName: this.state.userName})}>
               <Text style={styles.buttonTextStyle}>Edit</Text>
             </TouchableOpacity> : null
-          }          
+          }
+
+          {/* User information */}
+          <View style={styles.infoContent}>
+            <Text style={styles.textStyle}>Order History</Text>            
+          </View>      
         </ScrollView>        
         <MainMenu navigation={this.props.navigation}/>
       </SafeAreaView>           
