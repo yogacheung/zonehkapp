@@ -4,6 +4,7 @@ import { Text, TextInput, Button, View, StyleSheet, TouchableOpacity, StatusBar,
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { apiserver, imglink, wWidth, wHeight } from '../GlobalVar';
+import * as Crypto from 'expo-crypto';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,10 +19,12 @@ export default class SignIn extends Component<any, any> {
     super(props);
     this.state = {
       name: '',
-      password: '',      
+      password: '',
+      customer_id: 0,
       msg: '',
       expoPushToken: null,
       notification: {},
+
     }
   }
 
@@ -39,9 +42,9 @@ export default class SignIn extends Component<any, any> {
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
+      // console.log(token);
       this.setState({expoPushToken: token});
-      // this.postUserToken(); 
+      this.postUserToken(); 
     } else {
       alert('Must use physical device for Push Notifications');
     }
@@ -56,17 +59,17 @@ export default class SignIn extends Component<any, any> {
     }
   };
 
-  // postUserToken = () => {
-  //   var self = this;
-  //   axios.post(apitokenurl, {token: this.state.expoPushToken}, {withCredentials: true})
-  //   .then(function(res) {      
-  //     // console.log(res.data);
-  //     if(res.data.code === 200) {
-  //       // console.log(res.data.code);
-  //       self.props.navigation.navigate('Home', {connectsid: res.data.id});
-  //     }   
-  //   });
-  // }
+  postUserToken = () => {
+    var self = this;
+    axios.post(apiserver+ 'userapntoken', {customer_id: this.state.customer_id, token: this.state.expoPushToken}, {withCredentials: true})
+    .then(function(res) {      
+      // console.log(res.data);
+      if(res.data.code === 200) {
+        // console.log(res.data.code);
+        self.props.navigation.navigate('Home', {connectsid: res.data.id});
+      }   
+    });
+  }
 
   _handleNotification = (notification:any) => {
     this.setState({notification: notification});
@@ -77,21 +80,29 @@ export default class SignIn extends Component<any, any> {
   };
 
   // Sign in
-  onSignIn = () => {      
-    if(this.state.email.length < 1) {      
+  onSignIn = async () => {      
+    if(this.state.name.length < 1) {
       this.setState({msg: "Please input email."});
     } else if(this.state.password.length < 1) {      
       this.setState({msg: "Please input password."});
     } else {       
-      // Post to server
+      // Post to server      
+      console.log(this.state);
+      const digest = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.MD5,
+        this.state.password        
+      );
+      console.log(digest);      
       // console.log(this.state);
+
       var self = this;
-      axios.post(apiserver+ 'usersignin', {username: this.state.email, password: this.state.password})
+      axios.post(apiserver+ 'usersignin', {name: this.state.name, password: digest})
       .then(function(res) {      
-        // console.log(res.data);
-        if(res.data.code === 200){          
+         console.log(res.data);
+        if(res.data.code === 200){
           // console.log(self, 'login');          
-          let name = res.data.username.substring(0, res.data.username.indexOf('@'));   
+          self.setState({customer_id: res.data.res[0].ID});
+
           self.registerForPushNotificationsAsync();
           Notifications.addNotificationReceivedListener(self._handleNotification);
           Notifications.addNotificationResponseReceivedListener(self._handleNotificationResponse);
@@ -105,8 +116,8 @@ export default class SignIn extends Component<any, any> {
     }  
   }
 
-  updateEmail = (name: string) => {
-    this.setState({email: name, msg: ''});
+  updateName = (name: string) => {
+    this.setState({name: name, msg: ''});
   }
 
   updatePassword = (password: string) => {
@@ -118,7 +129,7 @@ export default class SignIn extends Component<any, any> {
     return(
       <View style={styles.container}>        
         <View>
-          <TextInput style={styles.inputStyle} placeholder="Name"  onChangeText={this.updateEmail}/>
+          <TextInput style={styles.inputStyle} placeholder="Name"  onChangeText={this.updateName}/>
           <TextInput style={styles.inputStyle}
             secureTextEntry={true}
             placeholder="Password"

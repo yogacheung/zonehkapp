@@ -8,6 +8,7 @@ import Product from './Screens/Product';
 import Account from './Screens/Account';
 import UserSignIn from './Screens/UserSignIn';
 import Category from './Screens/Category';
+import Cart from './Screens/Cart';
 
 // const options = ({{navigation}: {navigation: any}, {route}: {route: any}}) => ({
 //   headerLeft: <HeaderBackButton onPress={() => navigation.navigate('Home')} />
@@ -26,15 +27,17 @@ const AppNavigator = createStackNavigator(
         title: navigation.state.params.title,
       }),
     },
-    Category : {
+    Category: {
       screen: Category
     },
     Account: {
       screen: Account      
     },
+    Cart: {
+      screen: Cart
+    },
     UserSignIn: {
-      screen: UserSignIn,
-      navigationOptions: {headerShown: false}
+      screen: UserSignIn      
     },
   }, {
     initialRouteName: 'Home'

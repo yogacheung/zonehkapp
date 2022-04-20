@@ -71,7 +71,8 @@ export default class Feature extends Component<any, any> {
     return(
       <SafeAreaView style={styles.container}>
         <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />
-        {/* List all food */}
+        {/* List all products */}
+        {this.state.resList ?
         <FlatList
           showsVerticalScrollIndicator  = {false}
           data = {this.state.resList}          
@@ -84,6 +85,7 @@ export default class Feature extends Component<any, any> {
           }
           keyExtractor={item => item.id.toString()}         
         />
+        : null}
         {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}        
       </SafeAreaView>
     );

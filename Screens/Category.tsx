@@ -25,7 +25,7 @@ export default class Category extends Component<any, any> {
     // console.log(cate);
     this.state.catelist[i] = cate;
     // console.log(this.state.catelist[i]);
-    this.categoryList();
+    // this.categoryList();
     // console.log(this.state.catelist);
   }
 
@@ -33,13 +33,13 @@ export default class Category extends Component<any, any> {
     if(this.state.catelist) {
       return this.state.catelist.map((cate: any, i: number) => {                  
         return (
-          <View style={styles.section}>
-            <Checkbox 
+          <View style={styles.section} key={i}>
+            <Checkbox               
               style={styles.checkbox}
               value={Boolean(cate.checked)}
               onValueChange={(v) => this.updateIsChecked(i,v)}              
             />           
-            <Text key={i} style={styles.textStyle}>{cate.name}</Text>
+            <Text style={styles.textStyle}>{cate.name}</Text>
           </View>
         );
       });

@@ -12,59 +12,57 @@ export default class MainMenu extends Component<any, any> {
   }
 
   render() {
-      return(
-        <View style={styles.container}>
-          {/* Home button */}
-          <MaterialCommunityIcons style={styles.iconBtn}          
-            name='home-circle-outline'            
-            size={iconWidth}
-            color='black'
-            onPress={() => this.props.navigation.navigate('Home', {refresh: true})} />
+    return(
+      <View style={styles.container}>
+        {/* Home button */}
+        <MaterialCommunityIcons style={styles.iconBtn}          
+          name='home-circle-outline'            
+          size={iconWidth}
+          color='black'
+          onPress={() => this.props.navigation.navigate('Home', {refresh: true})} />
 
-          {/* Extra space for android */}
-          {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+        {/* Extra space for android */}
+        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-          {/* Order History button */}
-          <Ionicons style={styles.iconBtn}
-            name='cart-outline'            
-            size={iconWidth}
-            color='black'
-            onPress={() => this.props.navigation.navigate('OrderHistory')} />
-          
-          {/* Extra space for android */}
-          {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+        {/* Order History button */}
+        <Ionicons style={styles.iconBtn}
+          name='cart-outline'            
+          size={iconWidth}
+          color='black'
+          onPress={() => this.props.navigation.navigate('Cart')} />
+        
+        {/* Extra space for android */}
+        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-          {/* Message List button */}
-          <MaterialCommunityIcons style={styles.iconBtn}
-            name='message-processing-outline'            
-            size={iconWidth}
-            color='black'
-            onPress={() => this.props.navigation.navigate('MessageList')} />
-          
-          {/* Extra space for android */}
-          {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
-          
-          {/* Account button */}
-          <FontAwesome style={styles.iconBtn}
-            name='user-circle'            
-            size={iconWidth}
-            color='balck'
-            onPress={() => this.props.navigation.navigate('Account')} />
+        {/* Message List button */}
+        <MaterialCommunityIcons style={styles.iconBtn}
+          name='message-processing-outline'            
+          size={iconWidth}
+          color='black'
+          onPress={() => this.props.navigation.navigate('MessageList')} />
+        
+        {/* Extra space for android */}
+        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+        
+        {/* Account button */}
+        <FontAwesome style={styles.iconBtn}
+          name='user-circle'            
+          size={iconWidth}
+          color='balck'
+          onPress={() => this.props.navigation.navigate('Account')} />
 
-          {/* Extra space for android */}
-          {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+        {/* Extra space for android */}
+        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-          {/* Setting button */}
-          <Ionicons style={styles.iconBtn}          
-            name='settings-outline'            
-            size={iconWidth}
-            color='black'
-            onPress={() => this.props.navigation.navigate('Setting')} />
-        </View>
-      )
+        {/* Setting button */}
+        <Ionicons style={styles.iconBtn}          
+          name='settings-outline'            
+          size={iconWidth}
+          color='black'
+          onPress={() => this.props.navigation.navigate('Setting')} />
+      </View>
+    )
   }
-
-
 }
 
 const styles = StyleSheet.create({

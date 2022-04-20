@@ -20,7 +20,7 @@ export default class Account extends Component<any, any> {
 
   onfresh = (v:any) => {
     // console.log('refresh', v);    
-    this.getUserInfo();
+    // this.getUserInfo();
   }
 
   // Fetch user account information
