@@ -6,7 +6,7 @@ import Loader from '../components/Loader';
 import MainMenu from '../components/MainMenu';
 import { NavigationEvents } from 'react-navigation';
 
-export default class Setting extends Component<any, any> {
+export default class Message extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -26,7 +26,7 @@ export default class Setting extends Component<any, any> {
         <ScrollView>
           {/* Setting information */}
           <View style={styles.infoContent}>
-            <Text style={styles.textStyle}>Version: v0.1.0</Text>            
+            <Text style={styles.textStyle}>No message</Text>            
           </View>          
         </ScrollView>        
         <MainMenu navigation={this.props.navigation}/>

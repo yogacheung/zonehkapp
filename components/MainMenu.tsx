@@ -34,16 +34,6 @@ export default class MainMenu extends Component<any, any> {
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-        {/* Message List button */}
-        <MaterialCommunityIcons style={styles.iconBtn}
-          name='message-processing-outline'            
-          size={iconWidth}
-          color='black'
-          onPress={() => this.props.navigation.navigate('MessageList')} />
-        
-        {/* Extra space for android */}
-        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
-        
         {/* Account button */}
         <FontAwesome style={styles.iconBtn}
           name='user-circle'            
@@ -53,6 +43,16 @@ export default class MainMenu extends Component<any, any> {
 
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+
+        {/* Message List button */}
+        <MaterialCommunityIcons style={styles.iconBtn}
+          name='message-processing-outline'            
+          size={iconWidth}
+          color='black'
+          onPress={() => this.props.navigation.navigate('Message')} />
+        
+        {/* Extra space for android */}
+        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}              
 
         {/* Setting button */}
         <Ionicons style={styles.iconBtn}          

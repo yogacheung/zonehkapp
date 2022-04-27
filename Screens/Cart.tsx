@@ -3,7 +3,7 @@ import { StyleSheet, View, Platform, FlatList, SafeAreaView, TouchableWithoutFee
 import axios from 'axios';
 import { NavigationEvents } from 'react-navigation';
 import { apiserver, imglink, wWidth } from '../GlobalVar';
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import MainMenu from '../components/MainMenu';
 
@@ -38,6 +38,7 @@ const Item = ({ item }: any) => (
           <AntDesign name="pluscircleo" size={30} color="black" onPress={() => item.qty+1} />
         </View>
       </View> */}
+      <MaterialCommunityIcons name="delete-circle-outline" size={28} color="black"></MaterialCommunityIcons>
     </View>    
   </View>
 );
@@ -47,7 +48,8 @@ export default class Cart extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      resList: []
+      resList: [],
+      total: 0.0,
     }
   } 
 
@@ -79,11 +81,11 @@ export default class Cart extends Component<any, any> {
       );
     }
 
-    return(
+    return(      
       <SafeAreaView style={styles.container}>
         <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />              
           {/* List all products in cart */}
-          {this.state.resList ?
+          {this.state.resList ?          
           <FlatList
             showsVerticalScrollIndicator  = {false}
             data = {this.state.resList}          
@@ -95,25 +97,24 @@ export default class Cart extends Component<any, any> {
               </TouchableOpacity>
             }
             keyExtractor={item => item.id.toString()}         
-          />
+          />          
           : null}
-          {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}
 
-          <View style={styles.infoContent}>
-            <Text>Total: </Text>
-            <Text>Checkout</Text>
+          {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}
+          <View style={styles.totalContent}>
+            <Text style={styles.totalStyle}>Total: ${this.state.total}</Text>
+            <Text style={styles.totalStyle}>Checkout</Text>
           </View>
-          
+            
           <MainMenu navigation={this.props.navigation}/>
-        
-      </SafeAreaView>
+      </SafeAreaView>                  
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.9,
+    flex: 1,
     marginTop: StatusBar.currentHeight,
   },
   infoContent: {
@@ -121,6 +122,16 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,    
     borderRadius: 10,  
+  },
+  totalContent: {
+    backgroundColor: '#fcfcfc',
+    padding: 10,
+    paddingBottom: 30,
+       
+    borderRadius: 10,  
+  },
+  totalStyle: {
+    fontSize: wWidth*0.06,
   },
   item: {
     backgroundColor: '#fcfcfc',
