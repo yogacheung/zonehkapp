@@ -4,6 +4,7 @@ import axios from 'axios';
 import { NavigationEvents } from 'react-navigation';
 import { apiserver, imglink, wWidth } from '../GlobalVar';
 import Loader from '../components/Loader';
+import CachedImage from 'expo-cached-image';
 
 interface product {
   item: {
@@ -20,7 +21,8 @@ interface product {
 // Flatlist content
 const Item = ({ item }: product) => (  
   <View style={styles.item}>    
-    <Image
+    <CachedImage
+      cacheKey={`${item.id}-thumb`}
       style={styles.tinyLogo}
       source={{ uri: imglink+item.img }}
     />

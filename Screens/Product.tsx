@@ -5,6 +5,7 @@ import axios from 'axios';
 import { apiserver, imglink, wWidth, wHeight } from '../GlobalVar';
 import Loader from '../components/Loader';
 import MainMenu from '../components/MainMenu';
+import CachedImage from 'expo-cached-image';
 
 export default class Product extends Component<any, any> {
   constructor(props: any) {
@@ -51,7 +52,7 @@ export default class Product extends Component<any, any> {
     return(
       <SafeAreaView style={styles.container}>        
         <ScrollView>
-          <Image style={styles.image} source={{uri: imglink+this.state.info.img}} />
+          <CachedImage cacheKey={`${this.state.id}-thumb`} style={styles.image} source={{uri: imglink+this.state.info.img}} />
           <View style={styles.infoContent}>
             {/* Info */}
             <Text style={styles.title}>{this.state.info.title}</Text>

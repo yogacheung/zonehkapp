@@ -96,12 +96,12 @@ export default class SignIn extends Component<any, any> {
       // console.log(this.state);
 
       var self = this;
-      axios.post(apiserver+ 'usersignin', {name: this.state.name, password: digest})
+      axios.post(apiserver+ 'usersignin', {username: this.state.name, password: digest})
       .then(function(res) {      
          console.log(res.data);
         if(res.data.code === 200){
           // console.log(self, 'login');          
-          self.setState({customer_id: res.data.res[0].ID});
+          self.setState({user_id: res.data.res[0].user_id});
 
           self.registerForPushNotificationsAsync();
           Notifications.addNotificationReceivedListener(self._handleNotification);
