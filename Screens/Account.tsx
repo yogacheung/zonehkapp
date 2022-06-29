@@ -11,8 +11,8 @@ export default class Account extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      userId: '',
-      userName: '',
+      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
+      name: '',
       email: '',
       userInfo: null
     }
@@ -25,17 +25,17 @@ export default class Account extends Component<any, any> {
 
   // Fetch user account information
   getUserInfo = () => {    
-    axios.get(apiserver+'usersignin', {withCredentials: true})
+    axios.get(apiserver+'usersignin')
     .then(res => {
        console.log(res.data);
-      if(res.data.code === 200) {
-        let name = res.data.username.substring(0, res.data.username.indexOf('@'));
-        this.setState({userId: res.data.id, userName: name, email: res.data.username, isLoading: false});
+      if(res.data.code === 200) {        
+        this.setState({user_id: res.data.res[0].user_id, isLoading: false});
       }      
     });
   }
 
   componentDidMount() {
+    console.log('Account ', this.state.user_id);
     if(this.state.isLoading){
       // this.getUserInfo();
     }
@@ -51,7 +51,7 @@ export default class Account extends Component<any, any> {
             <Text>Welcome, {this.state.userName}</Text>
             {
               this.state.isLoading ?
-              <Button title="Required to sign in." onPress={() => this.props.navigation.navigate('UserSignIn')} /> 
+              <Button title="Please sign in." onPress={() => this.props.navigation.navigate('UserSignIn')} /> 
               : <Button title="Sign Out?" onPress={() => this.props.navigation.navigate('SignIn')} />
             }            
           </View>
@@ -59,8 +59,8 @@ export default class Account extends Component<any, any> {
           {/* User information */}
           <View style={styles.infoContent}>
             <Text style={styles.textStyle}>Email: {this.state.email}</Text>
-            <Text style={styles.textStyle}>Name: {this.state.userName}</Text>
-            <Text style={styles.textStyle}>Address:</Text>            
+            <Text style={styles.textStyle}>Name: {this.state.name}</Text>
+            <Text style={styles.textStyle}>Phone:</Text>            
           </View>
           
           {/* Edit button if signed in */}
@@ -79,7 +79,7 @@ export default class Account extends Component<any, any> {
             <Text style={styles.textStyle}>Order History</Text>            
           </View>      
         </ScrollView>        
-        <MainMenu navigation={this.props.navigation}/>
+        <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
       </SafeAreaView>           
     );
   }

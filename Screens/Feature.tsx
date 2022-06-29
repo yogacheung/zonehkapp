@@ -38,7 +38,8 @@ export default class Feature extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,      
-      resList: []
+      resList: [],
+      user_id: this.props.user_id
     }
   } 
 
@@ -57,6 +58,7 @@ export default class Feature extends Component<any, any> {
   }
   
   componentDidMount() {
+    console.log('Feature ', this.state.user_id);
     if(this.state.isLoading) {
       this.getFeature();
     }
@@ -80,7 +82,7 @@ export default class Feature extends Component<any, any> {
           data = {this.state.resList}          
           renderItem = { ({ item }) =>
             <TouchableOpacity
-              onPress = {() => this.props.navigation.navigate('Product', {id: item.id, title: item.title})}
+              onPress = {() => this.props.navigation.navigate('Product', {product_id: item.id, title: item.title, user_id: this.state.user_id})}
             >
               <Item item={item} />
             </TouchableOpacity>

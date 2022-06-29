@@ -49,7 +49,7 @@ export default class Message extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      user_id: 0,
+      user_id: this.props.user_id,
       msglist: null,
       user_msg: ''  
     }
@@ -115,7 +115,7 @@ export default class Message extends Component<any, any> {
               onPress={() => this.postMeassage()} style={styles.sendicon} color="black" />
 
           </View>
-        <MainMenu navigation={this.props.navigation}/> 
+          <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
       </SafeAreaView>
     );
   }

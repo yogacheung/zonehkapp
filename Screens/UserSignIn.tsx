@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Text, TextInput, Button, View, StyleSheet, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import { apiserver, imglink, wWidth, wHeight } from '../GlobalVar';
+import { apiserver, wWidth } from '../GlobalVar';
 import * as Crypto from 'expo-crypto';
 
 Notifications.setNotificationHandler({
@@ -14,17 +14,16 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export default class SignIn extends Component<any, any> {
+export default class UserSignIn extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      name: '',
+      email: '',
       password: '',
-      customer_id: 0,
+      user_id: 0,
       msg: '',
       expoPushToken: null,
       notification: {},
-
     }
   }
 
@@ -59,18 +58,6 @@ export default class SignIn extends Component<any, any> {
     }
   };
 
-  postUserToken = () => {
-    var self = this;
-    axios.post(apiserver+ 'userapntoken', {customer_id: this.state.customer_id, token: this.state.expoPushToken}, {withCredentials: true})
-    .then(function(res) {      
-      // console.log(res.data);
-      if(res.data.code === 200) {
-        // console.log(res.data.code);
-        self.props.navigation.navigate('Home', {connectsid: res.data.id});
-      }   
-    });
-  }
-
   _handleNotification = (notification:any) => {
     this.setState({notification: notification});
   };
@@ -81,26 +68,27 @@ export default class SignIn extends Component<any, any> {
 
   // Sign in
   onSignIn = async () => {      
-    if(this.state.name.length < 1) {
+    if(this.state.email.length < 1) {
       this.setState({msg: "Please input email."});
     } else if(this.state.password.length < 1) {      
       this.setState({msg: "Please input password."});
     } else {       
       // Post to server      
-      console.log(this.state);
+      // console.log(this.state);
       const digest = await Crypto.digestStringAsync(
         Crypto.CryptoDigestAlgorithm.MD5,
         this.state.password        
       );
-      console.log(digest);      
+      // console.log(digest);
       // console.log(this.state);
 
       var self = this;
-      axios.post(apiserver+ 'usersignin', {username: this.state.name, password: digest})
+      axios.post(apiserver+ 'usersignin', {email: this.state.email, password: digest})
       .then(function(res) {      
-         console.log(res.data);
+        //  console.log(res.data);
         if(res.data.code === 200){
-          // console.log(self, 'login');          
+          // console.log(self, 'login');     
+          
           self.setState({user_id: res.data.res[0].user_id});
 
           self.registerForPushNotificationsAsync();
@@ -108,16 +96,29 @@ export default class SignIn extends Component<any, any> {
           Notifications.addNotificationResponseReceivedListener(self._handleNotificationResponse);
 
           // console.log(self.state.expoPushToken);
+          self.postUserToken();
         } else {
-          // alert(res.data.message);
-          self.setState({msg: res.data.message});
+          // alert(res.data.res[0].msg);
+          self.setState({msg: res.data.res[0].msg});
         }        
       });  
     }  
   }
 
-  updateName = (name: string) => {
-    this.setState({name: name, msg: ''});
+  postUserToken = () => {
+    var self = this;
+    axios.post(apiserver+ 'userapntoken', {user_id: this.state.user_id, token: this.state.expoPushToken})
+    .then(function(res) {      
+      // console.log(res.data);
+      if(res.data.code === 200) {
+        // console.log(res.data.code);        
+        self.props.navigation.navigate('Home', {user_id: self.state.user_id});
+      }   
+    });
+  }
+
+  updateEmail = (email: string) => {
+    this.setState({email: email, msg: ''});
   }
 
   updatePassword = (password: string) => {
@@ -129,10 +130,16 @@ export default class SignIn extends Component<any, any> {
     return(
       <View style={styles.container}>        
         <View>
-          <TextInput style={styles.inputStyle} placeholder="Name"  onChangeText={this.updateName}/>
-          <TextInput style={styles.inputStyle}
+          <TextInput 
+            style={styles.inputStyle}
+            placeholder="Email"
+            placeholderTextColor='gray'
+            onChangeText={this.updateEmail}/>
+          <TextInput
+            style={styles.inputStyle}
             secureTextEntry={true}
             placeholder="Password"
+            placeholderTextColor='gray'
             onChangeText={this.updatePassword}
           />          
           {this.state.msg != '' ? (
@@ -147,7 +154,7 @@ export default class SignIn extends Component<any, any> {
             <Text style={styles.buttonTextStyle}>Sign In</Text>
           </TouchableOpacity>
           <Text>If you want to create an account, Please </Text>
-          <Button title="Sign Up" onPress={() => this.props.navigation.navigate('SignUp')}/>
+          <Button title="Sign Up" onPress={() => this.props.navigation.navigate('UserSignUp')}/>
         </View>
       </View>
     );
@@ -158,17 +165,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FCFCFCFC',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center',    
     marginTop: StatusBar.currentHeight,
   },
   inputStyle: {
-    fontSize: wWidth*0.05,
+    fontSize: wWidth*0.05,    
     padding: 15,
     margin: 5,  
     borderWidth: 1,
     borderRadius: 20,
     borderColor: '#dadae8',
+    width: wWidth*0.8,
   },
   buttonStyle: {    
     backgroundColor: '#fcfcfc',    
@@ -176,7 +183,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,    
     alignItems: 'center',
     borderRadius: 30,    
-    marginVertical: 10,
+    marginVertical: 50,
     marginBottom: 30,
   },
   buttonTextStyle: {

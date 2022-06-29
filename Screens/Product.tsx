@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Text, TextInput, StatusBar, Pressable, Modal, Platform, Alert } from 'react-native';
+import { SafeAreaView, View, Image, ScrollView, TouchableOpacity, FlatList, StyleSheet, Text, TextInput, StatusBar, Pressable, Platform, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { apiserver, imglink, wWidth, wHeight } from '../GlobalVar';
@@ -12,7 +12,8 @@ export default class Product extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      id: this.props.navigation.state.params.id,
+      product_id: this.props.navigation.state.params.product_id,
+      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
       info: null,
       qty: 1
     }    
@@ -20,7 +21,7 @@ export default class Product extends Component<any, any> {
 
   getProductDetail = () => {
     var self = this;
-    axios.get(apiserver+'getproduct/'+this.state.id)
+    axios.get(apiserver+'getproduct/'+this.state.product_id)
     .then(res => {
       // console.log(res.data);      
       if(res.data.code === 200) {
@@ -36,7 +37,19 @@ export default class Product extends Component<any, any> {
     }    
   }
 
+  addToCart = () => {
+    var self = this;
+    axios.post(apiserver+'addtocart', {product_id: this.state.product_id, qty: this.state.qty, user_id: this.state.user_id})
+    .then(res => {
+       console.log(res.data);      
+      if(res.data.code === 200) {            
+        // console.log(this.state);  
+      }      
+    });
+  }
+
   componentDidMount() {
+    console.log('Product ', this.state.user_id);
     if(this.state.isLoading){
       this.getProductDetail();      
     }    
@@ -79,12 +92,13 @@ export default class Product extends Component<any, any> {
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
+              onPress={this.addToCart}
             >
               <Text style={styles.buttonTextStyle}>Add To Cart</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>        
-        <MainMenu navigation={this.props.navigation}/>
+        <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
       </SafeAreaView>
     );
   }

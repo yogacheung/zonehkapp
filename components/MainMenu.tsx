@@ -1,5 +1,5 @@
 import React, { Component } from 'react';;
-import { Platform,  StyleSheet, View, Ionicons, FontAwesome, MaterialCommunityIcons, wWidth, iconPad, btmLocat, iconWidth } from "../GlobalVar";
+import { Platform,  StyleSheet, View, Ionicons, FontAwesome, MaterialCommunityIcons, wWidth, iconPad, btmLocat, iconWidth, Alert } from "../GlobalVar";
 
 export default class MainMenu extends Component<any, any> {
   // Constructor for class
@@ -7,7 +7,8 @@ export default class MainMenu extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      err: null
+      err: null,
+      user_id: this.props.user_id
     }
   }
 
@@ -24,12 +25,12 @@ export default class MainMenu extends Component<any, any> {
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-        {/* Order History button */}
+        {/* Cart button */}
         <Ionicons style={styles.iconBtn}
           name='cart-outline'            
           size={iconWidth}
           color='black'
-          onPress={() => this.props.navigation.navigate('Cart')} />
+          onPress={() => this.props.navigation.navigate('Cart', {user_id: this.state.user_id})} />
         
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
@@ -39,7 +40,7 @@ export default class MainMenu extends Component<any, any> {
           name='user-circle'            
           size={iconWidth}
           color='balck'
-          onPress={() => this.props.navigation.navigate('Account')} />
+          onPress={() => this.props.navigation.navigate('Account', {user_id: this.state.user_id})} />
 
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
@@ -49,7 +50,7 @@ export default class MainMenu extends Component<any, any> {
           name='message-processing-outline'            
           size={iconWidth}
           color='black'
-          onPress={() => this.props.navigation.navigate('Message')} />
+          onPress={() => this.props.navigation.navigate('MessageList', {user_id: this.state.user_id})} />
         
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}              

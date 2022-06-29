@@ -48,6 +48,7 @@ export default class Cart extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
+      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
       resList: [],
       total: 0.0,
     }
@@ -66,10 +67,21 @@ export default class Cart extends Component<any, any> {
       }
     });
   }
+
+  getCart = () => {
+    axios.get(apiserver+'getcart/'+this.state.user_id)
+    .then(res => {
+      console.log(res.data);
+      if(res.data.code === 200) {
+        this.setState({resList: res.data.res, isLoading: false});
+      }
+    });
+  }
   
   componentDidMount() {
+    console.log('Cart ', this.state.user_id);
     if(this.state.isLoading) {
-      this.getFeature();
+      this.getCart();
     }
   }
 
@@ -106,7 +118,7 @@ export default class Cart extends Component<any, any> {
             <Text style={styles.totalStyle}>Checkout</Text>
           </View>
             
-          <MainMenu navigation={this.props.navigation}/>
+          <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
       </SafeAreaView>                  
     );
   }

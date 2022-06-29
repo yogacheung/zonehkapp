@@ -7,10 +7,12 @@ import Home from './Screens/Home';
 import Product from './Screens/Product';
 import Account from './Screens/Account';
 import UserSignIn from './Screens/UserSignIn';
+import UserSignUp from './Screens/UserSignUp';
 import Category from './Screens/Category';
 import Cart from './Screens/Cart';
 import Setting from './Screens/Setting';
 import Message from './Screens/Message';
+import MessageList from './Screens/MessageList';
 
 // const options = ({{navigation}: {navigation: any}, {route}: {route: any}}) => ({
 //   headerLeft: <HeaderBackButton onPress={() => navigation.navigate('Home')} />
@@ -41,8 +43,14 @@ const AppNavigator = createStackNavigator(
     UserSignIn: {
       screen: UserSignIn      
     },
+    UserSignUp: {
+      screen: UserSignUp  
+    },
     Message: {
       screen: Message
+    },
+    MessageList: {
+      screen: MessageList
     },
     Setting: {
       screen: Setting
