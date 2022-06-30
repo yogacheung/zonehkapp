@@ -50,7 +50,7 @@ export default class Feature extends Component<any, any> {
   getFeature = () => {
     axios.get(apiserver+'getfeature')
     .then(res => {
-      // console.log(res);
+      console.log(res.data);
       if(res.data.code === 200) {
         this.setState({resList: res.data.list, isLoading: false});
       }

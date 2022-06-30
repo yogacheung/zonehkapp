@@ -13,9 +13,10 @@ export default class Product extends Component<any, any> {
     this.state = {
       isLoading: true,
       product_id: this.props.navigation.state.params.product_id,
-      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
+      user_id: this.props.navigation.state.params.user_id!=null? this.props.navigation.state.params.user_id: 1,
       info: null,
-      qty: 1
+      qty: 1,
+      msg: ''
     }    
   }
 
@@ -23,7 +24,7 @@ export default class Product extends Component<any, any> {
     var self = this;
     axios.get(apiserver+'getproduct/'+this.state.product_id)
     .then(res => {
-      // console.log(res.data);      
+       console.log(res.data);      
       if(res.data.code === 200) {
         self.setState({info: res.data.res[0], isLoading: false});        
         // console.log(this.state);  
@@ -44,6 +45,14 @@ export default class Product extends Component<any, any> {
        console.log(res.data);      
       if(res.data.code === 200) {            
         // console.log(this.state);  
+        Alert.alert('Add To Cart', 'Added. Go to Cart?', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel'),
+            style: 'cancel',
+          },
+          { text: 'Go', onPress: () => this.props.navigation.navigate('Cart', {user_id: this.state.user_id}) },
+        ]);
       }      
     });
   }
@@ -65,7 +74,7 @@ export default class Product extends Component<any, any> {
     return(
       <SafeAreaView style={styles.container}>        
         <ScrollView>
-          <CachedImage cacheKey={`${this.state.id}-thumb`} style={styles.image} source={{uri: imglink+this.state.info.img}} />
+          <CachedImage cacheKey={`${this.state.product_id}-thumb`} style={styles.image} source={{uri: imglink+this.state.info.img}} />
           <View style={styles.infoContent}>
             {/* Info */}
             <Text style={styles.title}>{this.state.info.title}</Text>

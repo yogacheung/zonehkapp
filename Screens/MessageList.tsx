@@ -19,8 +19,8 @@ export default class MessageList extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      recevierlist: [],
-      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
+      recevierList: [],
+      user_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,
     }
   }
 
@@ -49,14 +49,15 @@ export default class MessageList extends Component<any, any> {
     .then(res => {
       console.log(res.data);
       if(res.data.code === 200){
-        this.setState({recevierlist: res.data.res[0], isLoading: false});
+        this.setState({recevierList: res.data.res, isLoading: false});
       }     
     });
   }
 
   componentDidMount() {
+    console.log('MessageList ', this.state.user_id);
     if(this.state.isLoading) {
-      if(this.state.user_id) {
+      if(this.state.user_id != null) {
         this.getMessageList();
       } else {
         this.requireSignIn();
@@ -75,24 +76,29 @@ export default class MessageList extends Component<any, any> {
       <SafeAreaView style={styles.container}>        
         <View>          
           <FlatList 
-            data = {this.state.bakerlist} 
+            data = {this.state.recevierList} 
             renderItem = { ({ item }) =>
               <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Message', {receiver_id: item._id, sender_id: this.state.user_id})}
+                onPress = {() => this.props.navigation.navigate('Message', {receiver_id: item.receiver_id, sender_id: this.state.user_id})}
               >
-                <Item baker={item} />
+                <Item recevier={item} />
               </TouchableOpacity>
             }
-            keyExtractor={item => item._id.toString()}         
+            keyExtractor={item => item.receiver_id.toString()}         
           />
           
           {/* No record */}
-          {this.state.bakerlist.length === 0 ?
-            <View style={styles.item}>        
-              <View style={styles.itemDetail}>    
-              <Text style={styles.title}>No Message</Text>
-              </View>    
-            </View> : null
+          {this.state.recevierList?
+            <TouchableOpacity
+              onPress = {() => this.props.navigation.navigate('Message', {receiver_id: 2, sender_id: this.state.user_id})}
+            >
+              <View style={styles.item}>        
+                <View style={styles.itemDetail}>    
+                <Text style={styles.title}>Customer Service</Text>
+                </View>    
+              </View> 
+            </TouchableOpacity>
+            : null
           }
         </View>
         <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>

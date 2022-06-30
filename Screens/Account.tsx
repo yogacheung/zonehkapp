@@ -11,9 +11,7 @@ export default class Account extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
-      name: '',
-      email: '',
+      user_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,      
       userInfo: null
     }
   }
@@ -23,13 +21,19 @@ export default class Account extends Component<any, any> {
     // this.getUserInfo();
   }
 
+  // Sign out
+  onSignOut = () => {
+    console.log('sign out');
+    this.setState({user_id: 0, userInfo: null});
+  }
+
   // Fetch user account information
   getUserInfo = () => {    
-    axios.get(apiserver+'usersignin')
+    axios.get(apiserver+'getuseraccount/'+this.state.user_id)
     .then(res => {
        console.log(res.data);
       if(res.data.code === 200) {        
-        this.setState({user_id: res.data.res[0].user_id, isLoading: false});
+        this.setState({userInfo: res.data.res[0], isLoading: false});
       }      
     });
   }
@@ -37,35 +41,41 @@ export default class Account extends Component<any, any> {
   componentDidMount() {
     console.log('Account ', this.state.user_id);
     if(this.state.isLoading){
-      // this.getUserInfo();
+      this.getUserInfo();
     }
   }
 
   render() {
+    if(this.state.isLoading) {
+      return(
+        <Loader />
+      );
+    }
+
     return(            
       <SafeAreaView style={styles.container}>   
         <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />   
         <ScrollView>
           {/* Welcome and Sign In */}
           <View style={styles.infoContent}>
-            <Text>Welcome, {this.state.userName}</Text>
+            <Text style={styles.textStyle}>Welcome, {this.state.userInfo != null? this.state.userInfo.name: ''}</Text>
             {
-              this.state.isLoading ?
+              this.state.user_id == 0 ?
               <Button title="Please sign in." onPress={() => this.props.navigation.navigate('UserSignIn')} /> 
-              : <Button title="Sign Out?" onPress={() => this.props.navigation.navigate('SignIn')} />
+              : <Button title="Sign Out?" onPress={this.onSignOut} />
             }            
           </View>
           
-          {/* User information */}
+          {/* User information */}                    
           <View style={styles.infoContent}>
-            <Text style={styles.textStyle}>Email: {this.state.email}</Text>
-            <Text style={styles.textStyle}>Name: {this.state.name}</Text>
-            <Text style={styles.textStyle}>Phone:</Text>            
+            <Text style={styles.textStyle}>Email: {this.state.userInfo != null? this.state.userInfo.email: ''}</Text>
+            <Text style={styles.textStyle}>Name: {this.state.userInfo != null? this.state.userInfo.name: ''}</Text>
+            <Text style={styles.textStyle}>Phone: {this.state.userInfo != null? this.state.userInfo.phone: ''}</Text>
           </View>
-          
+            
           {/* Edit button if signed in */}
           {
-            !this.state.isLoading ?
+            this.state.user_id != 0 ?
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
@@ -96,6 +106,7 @@ const styles = StyleSheet.create({
     margin: 10,    
   },
   textStyle: {
+    fontSize: wWidth*0.06,
     padding: 5,
   },
   buttonStyle: {    
@@ -110,6 +121,6 @@ const styles = StyleSheet.create({
   },
   buttonTextStyle: {
     color: '#000000',    
-    fontSize: wWidth*0.05, 
+    fontSize: wWidth*0.08, 
   },
 });

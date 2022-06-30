@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Platform, FlatList, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity, TextInput, Text, Image, StatusBar } from 'react-native';
+import { StyleSheet, View, Platform, FlatList, SafeAreaView, TouchableWithoutFeedback, TouchableOpacity, TextInput, Text, Alert, StatusBar } from 'react-native';
 import axios from 'axios';
 import { NavigationEvents } from 'react-navigation';
 import { apiserver, imglink, wWidth } from '../GlobalVar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import MainMenu from '../components/MainMenu';
+import CachedImage from 'expo-cached-image';
 
 interface product {
   item: {
@@ -20,62 +21,60 @@ interface product {
   }
 }
 
-// Flatlist content
-const Item = ({ item }: any) => (  
-  <View style={styles.item}>    
-    <Image
-      style={styles.tinyLogo}
-      source={{ uri: imglink+item.img }}
-    />
-    <View style={styles.itemDetail}>    
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.subtitile}>Price: HK${item.min_price} x1</Text>      
-      {/* Quantity */}
-      {/* <View style={{flex:1, alignItems: 'flex-end'}}>
-        <View style={styles.rowStyle}>
-          <AntDesign name="minuscircleo" size={30} color="black" onPress={() => item.qty > 1 ? item.qty-1 : null} />
-          <TextInput style={styles.qty} value={item.qty.toString()} underlineColorAndroid='transparent'/>
-          <AntDesign name="pluscircleo" size={30} color="black" onPress={() => item.qty+1} />
-        </View>
-      </View> */}
-      <MaterialCommunityIcons name="delete-circle-outline" size={28} color="black"></MaterialCommunityIcons>
-    </View>    
-  </View>
-);
-
 export default class Cart extends Component<any, any> { 
   constructor(props: any) {
     super(props);
     this.state = {
       isLoading: true,
-      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : 1,
+      user_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,
       resList: [],
       total: 0.0,
+      localcart: []
     }
   } 
 
   onfresh = (v:any) => {
-    this.getFeature();
+    this.getCart();
   }
 
-  getFeature = () => {
-    axios.get(apiserver+'getfeature')
-    .then(res => {
-      // console.log(res);
-      if(res.data.code === 200) {
-        this.setState({resList: res.data.list, isLoading: false});
-      }
-    });
+  calTotal = () => {
+    const totalPrice = this.state.resList.reduce((total: number, item:any) => 
+      total += item.min_price * item.qty
+    , 0.0);  
+    this.setState({total: totalPrice});
   }
 
   getCart = () => {
+    let self = this;
     axios.get(apiserver+'getcart/'+this.state.user_id)
     .then(res => {
       console.log(res.data);
-      if(res.data.code === 200) {
-        this.setState({resList: res.data.res, isLoading: false});
+      if(res.data.code === 200) {        
+        self.setState({resList: res.data.res, isLoading: false});
+        self.calTotal();
       }
     });
+  }
+
+  removeCart = (cart_id: number) => {
+    let self = this;
+    Alert.alert('Remove Product', 'Confirm to remove?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel'),
+        style: 'cancel',
+      },
+      { text: 'Confrim', onPress: () => {
+          axios.get(apiserver+'removecart/'+cart_id)
+          .then(res => {
+            // console.log(res.data);
+            if(res.data.code === 200) {        
+              self.setState({resList: res.data.res, isLoading: false});
+              self.calTotal();
+            }
+          });
+      } },
+    ]);
   }
   
   componentDidMount() {
@@ -103,9 +102,28 @@ export default class Cart extends Component<any, any> {
             data = {this.state.resList}          
             renderItem = { ({ item }) =>
               <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Product', {id: item.id, title: item.title})}
+                onPress = {() => this.props.navigation.navigate('Product', {product_id: item.id, title: item.title, user_id: this.state.user_id}) }
               >
-                <Item item={item} />
+                <View style={styles.item}>    
+                  <CachedImage
+                    cacheKey={`${item.product_id}-thumb`}
+                    style={styles.tinyLogo}
+                    source={{ uri: imglink+item.img }}
+                  />
+                  <View style={styles.itemDetail}>    
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.subtitile}>Price: HK${item.min_price} x {item.qty}</Text>      
+                    {/* Quantity */}
+                    {/* <View style={{flex:1, alignItems: 'flex-end'}}>
+                      <View style={styles.rowStyle}>
+                        <AntDesign name="minuscircleo" size={30} color="black" onPress={() => item.qty > 1 ? item.qty-1 : null} />
+                        <TextInput style={styles.qty} value={item.qty.toString()} underlineColorAndroid='transparent'/>
+                        <AntDesign name="pluscircleo" size={30} color="black" onPress={() => item.qty+1} />
+                      </View>
+                    </View> */}
+                    <MaterialCommunityIcons name="delete-circle-outline" size={28} color="black" onPress={() => this.removeCart(item.id)}></MaterialCommunityIcons>
+                  </View>    
+                </View>
               </TouchableOpacity>
             }
             keyExtractor={item => item.id.toString()}         
@@ -113,9 +131,9 @@ export default class Cart extends Component<any, any> {
           : null}
 
           {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}
-          <View style={styles.totalContent}>
+          <View style={styles.totalContent}>            
             <Text style={styles.totalStyle}>Total: ${this.state.total}</Text>
-            <Text style={styles.totalStyle}>Checkout</Text>
+            <Text style={styles.totalStyle}>Checkout</Text>            
           </View>
             
           <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
@@ -139,11 +157,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fcfcfc',
     padding: 10,
     paddingBottom: 30,
-       
+    marginBottom: 50,   
     borderRadius: 10,  
   },
   totalStyle: {
     fontSize: wWidth*0.06,
+    color: 'black'
   },
   item: {
     backgroundColor: '#fcfcfc',

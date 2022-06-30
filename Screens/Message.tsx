@@ -9,15 +9,15 @@ import { Feather } from '@expo/vector-icons';
 
 // Message in line
 const Item = ({ msg }:any) => {
-  if(msg.from_customer) {
+  if(msg.sender_id == 1) {
     return (
       <View style={{padding: 5}}>
-        <Text style={styles.time}>{msg.time}</Text>
+        <Text style={styles.time}>{msg.sent_time}</Text>
         <View style={styles.item}>
-          <Text style={styles.subtitile}>{msg.msg}</Text>          
+          <Text style={styles.subtitile}>{msg.msgchat}</Text>          
         </View>
         <View style={styles.senderStyle}>            
-          <Text style={styles.sendertitle}>From: {msg.name}</Text>
+          <Text style={styles.sendertitle}>From: You</Text>
           {/* <Icon style={styles.iconBtn}
                   name='check-square'
                   type='font-awesome'
@@ -28,12 +28,12 @@ const Item = ({ msg }:any) => {
   } else {
     return (
       <View style={{padding: 5}}>
-        <Text style={styles.time}>{msg.time}</Text>
+        <Text style={styles.time}>{msg.sent_time}</Text>
         <View style={styles.item}>
-          <Text style={styles.subtitile}>{msg.msg}</Text>          
+          <Text style={styles.subtitile}>{msg.msgchat}</Text>          
         </View>
         <View style={styles.rowStyle}>            
-          <Text style={styles.subtitile}>From: {msg.name}</Text>
+          <Text style={styles.subtitile}>From: CS</Text>
           {/* <Icon style={styles.iconBtn}
                   name='check-square'
                   type='font-awesome'
@@ -49,45 +49,46 @@ export default class Message extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      user_id: this.props.user_id,
+      receiver_id: this.props.navigation.state.params.receiver_id,
+      sender_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,
       msglist: null,
-      user_msg: ''  
+      msgchat: ''  
     }
   }
 
   // Fetch message content
   getMessage = () => {
     var self = this;
-    axios.get(apiserver+this.state.user_id)
+    axios.get(apiserver+'getmessages/'+this.state.receiver_id+'/'+this.state.sender_id)
     .then(function(res) {
        console.log(res.data);
       if(res.data.code === 200) {
-        self.setState({msglist: res.data.data, isLoading: false});
-      } else {
-        self.props.navigation.navigate('SignIn');
+        self.setState({msglist: res.data.res, isLoading: false});
       }
     });
   }
 
   updateInputMsg = (msg:any) => {
-    this.setState({user_msg: msg});
+    this.setState({msgchat: msg});
   }
 
   // Send message
   postMeassage = () => {
+    console.log(this.state);
     var self = this;
-    axios.post(apiserver+'/', {msg: this.state.cusmsg, receiver: this.state.bakerId},{withCredentials: true})
+    axios.post(apiserver+'sendmessage', {receiver_id: this.state.receiver_id, sender_id: this.state.sender_id, msgchat: this.state.msgchat})
     .then(function(res) {      
-      // console.log(res.data);
+      console.log(res.data);
       if(res.data.code === 200) {
         self.getMessage();
       } else {
-        console.log(res.data.data);
+        console.log(res.data);
       }
     });  
   }
 
   componentDidMount() {
+    console.log('Message ', this.state.sender_id, this.state.receiver_id);
     if(this.state.isLoading){
       this.getMessage();
     }
@@ -106,11 +107,11 @@ export default class Message extends Component<any, any> {
           <FlatList 
             data = {this.state.msglist} 
             renderItem = { ({ item }) => <Item msg={item} />}
-            keyExtractor={item => item._id.toString()}         
+            keyExtractor={item => item.msg_id.toString()}         
           />
         </View>
           <View style={styles.msgStyle}>
-            <TextInput style={styles.msgbar} placeholder="" value={this.state.cusmsg} underlineColorAndroid='transparent' onChangeText={this.updateInputMsg}/>
+            <TextInput style={styles.msgbar} placeholder="" value={this.state.msgchat} underlineColorAndroid='transparent' onChangeText={this.updateInputMsg}/>
             <Feather name="send" size={wWidth/15}
               onPress={() => this.postMeassage()} style={styles.sendicon} color="black" />
 
