@@ -12,8 +12,7 @@ export default class Product extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      product_id: this.props.navigation.state.params.product_id,
-      user_id: this.props.navigation.state.params.user_id!=null? this.props.navigation.state.params.user_id: 1,
+      product_id: this.props.navigation.state.params.product_id,      
       info: null,
       qty: 1,
       msg: ''
@@ -40,7 +39,7 @@ export default class Product extends Component<any, any> {
 
   addToCart = () => {
     var self = this;
-    axios.post(apiserver+'addtocart', {product_id: this.state.product_id, qty: this.state.qty, user_id: this.state.user_id})
+    axios.post(apiserver+'addtocart', {product_id: this.state.product_id, qty: this.state.qty})
     .then(res => {
        console.log(res.data);      
       if(res.data.code === 200) {            
@@ -51,14 +50,13 @@ export default class Product extends Component<any, any> {
             onPress: () => console.log('Cancel'),
             style: 'cancel',
           },
-          { text: 'Go', onPress: () => this.props.navigation.navigate('Cart', {user_id: this.state.user_id}) },
+          { text: 'Go', onPress: () => this.props.navigation.navigate('Cart') },
         ]);
       }      
     });
   }
 
-  componentDidMount() {
-    console.log('Product ', this.state.user_id);
+  componentDidMount() {    
     if(this.state.isLoading){
       this.getProductDetail();      
     }    
@@ -107,7 +105,7 @@ export default class Product extends Component<any, any> {
             </TouchableOpacity>
           </View>
         </ScrollView>        
-        <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
+        <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>
     );
   }

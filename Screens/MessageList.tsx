@@ -19,8 +19,7 @@ export default class MessageList extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      recevierList: [],
-      user_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,
+      recevierList: []      
     }
   }
 
@@ -45,23 +44,18 @@ export default class MessageList extends Component<any, any> {
 
   // Fetch message list
   getMessageList = () => {
-    axios.get(apiserver+'getreceiver/'+this.state.user_id)
+    axios.get(apiserver+'getreceiver', {withCredentials: true})
     .then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       if(res.data.code === 200){
         this.setState({recevierList: res.data.res, isLoading: false});
-      }     
+      } else this.requireSignIn();     
     });
   }
 
-  componentDidMount() {
-    console.log('MessageList ', this.state.user_id);
+  componentDidMount() {    
     if(this.state.isLoading) {
-      if(this.state.user_id != null) {
-        this.getMessageList();
-      } else {
-        this.requireSignIn();
-      }        
+      this.getMessageList();      
     }    
   }
 
@@ -79,7 +73,7 @@ export default class MessageList extends Component<any, any> {
             data = {this.state.recevierList} 
             renderItem = { ({ item }) =>
               <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Message', {receiver_id: item.receiver_id, sender_id: this.state.user_id})}
+                onPress = {() => this.props.navigation.navigate('Message', {receiver_id: item.receiver_id})}
               >
                 <Item recevier={item} />
               </TouchableOpacity>
@@ -90,7 +84,7 @@ export default class MessageList extends Component<any, any> {
           {/* No record */}
           {this.state.recevierList?
             <TouchableOpacity
-              onPress = {() => this.props.navigation.navigate('Message', {receiver_id: 2, sender_id: this.state.user_id})}
+              onPress = {() => this.props.navigation.navigate('Message', {receiver_id: 1})}
             >
               <View style={styles.item}>        
                 <View style={styles.itemDetail}>    
@@ -101,7 +95,7 @@ export default class MessageList extends Component<any, any> {
             : null
           }
         </View>
-        <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
+        <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>
     );
   }

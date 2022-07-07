@@ -49,8 +49,7 @@ export default class Message extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      receiver_id: this.props.navigation.state.params.receiver_id,
-      sender_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,
+      receiver_id: this.props.navigation.state.params.receiver_id,      
       msglist: null,
       msgchat: ''  
     }
@@ -59,7 +58,7 @@ export default class Message extends Component<any, any> {
   // Fetch message content
   getMessage = () => {
     var self = this;
-    axios.get(apiserver+'getmessages/'+this.state.receiver_id+'/'+this.state.sender_id)
+    axios.get(apiserver+'getmessages/'+this.state.receiver_id, {withCredentials: true})
     .then(function(res) {
        console.log(res.data);
       if(res.data.code === 200) {
@@ -76,7 +75,7 @@ export default class Message extends Component<any, any> {
   postMeassage = () => {
     console.log(this.state);
     var self = this;
-    axios.post(apiserver+'sendmessage', {receiver_id: this.state.receiver_id, sender_id: this.state.sender_id, msgchat: this.state.msgchat})
+    axios.post(apiserver+'sendmessage', {receiver_id: this.state.receiver_id, msgchat: this.state.msgchat}, {withCredentials: true})
     .then(function(res) {      
       console.log(res.data);
       if(res.data.code === 200) {
@@ -87,8 +86,7 @@ export default class Message extends Component<any, any> {
     });  
   }
 
-  componentDidMount() {
-    console.log('Message ', this.state.sender_id, this.state.receiver_id);
+  componentDidMount() {    
     if(this.state.isLoading){
       this.getMessage();
     }
@@ -116,7 +114,7 @@ export default class Message extends Component<any, any> {
               onPress={() => this.postMeassage()} style={styles.sendicon} color="black" />
 
           </View>
-          <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
+          <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>
     );
   }

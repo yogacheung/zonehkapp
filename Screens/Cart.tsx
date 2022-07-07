@@ -25,8 +25,7 @@ export default class Cart extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isLoading: true,
-      user_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,
+      isLoading: true,      
       resList: [],
       total: 0.0,
       localcart: []
@@ -46,9 +45,9 @@ export default class Cart extends Component<any, any> {
 
   getCart = () => {
     let self = this;
-    axios.get(apiserver+'getcart/'+this.state.user_id)
+    axios.get(apiserver+'getcart')
     .then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       if(res.data.code === 200) {        
         self.setState({resList: res.data.res, isLoading: false});
         self.calTotal();
@@ -77,8 +76,7 @@ export default class Cart extends Component<any, any> {
     ]);
   }
   
-  componentDidMount() {
-    console.log('Cart ', this.state.user_id);
+  componentDidMount() { 
     if(this.state.isLoading) {
       this.getCart();
     }
@@ -102,7 +100,7 @@ export default class Cart extends Component<any, any> {
             data = {this.state.resList}          
             renderItem = { ({ item }) =>
               <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Product', {product_id: item.id, title: item.title, user_id: this.state.user_id}) }
+                onPress = {() => this.props.navigation.navigate('Product', {product_id: item.product_id, title: item.title}) }
               >
                 <View style={styles.item}>    
                   <CachedImage
@@ -128,7 +126,11 @@ export default class Cart extends Component<any, any> {
             }
             keyExtractor={item => item.id.toString()}         
           />          
-          : null}
+          : 
+          <View style={styles.item}>
+            <Text style={styles.title}>No prodcut.</Text>
+          </View>
+          }
 
           {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}
           <View style={styles.totalContent}>            
@@ -136,7 +138,7 @@ export default class Cart extends Component<any, any> {
             <Text style={styles.totalStyle}>Checkout</Text>            
           </View>
             
-          <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
+          <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>                  
     );
   }

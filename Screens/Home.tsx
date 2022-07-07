@@ -11,24 +11,7 @@ export default class Home extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      showCate: false,
-      user_id: this.props.navigation.state.params? this.props.navigation.state.params.user_id : null
-    }
-  }
-
-  onfresh = (v:any) => {
-    console.log('Home', this.state.user_id, this.props.navigation.state.params);
-    if(this.props.navigation.state.params && this.state.user_id == null){
-      this.setState({user_id: this.props.navigation.state.params.user_id});
-      console.log('Home ', this.state.user_id);
-    }
-  }
-
-  componentDidMount() {
-    console.log('Home', this.state.user_id, this.props.navigation.state.params);    
-    if(this.props.navigation.state.params && this.state.user_id == null){
-      this.setState({user_id: this.props.navigation.state.params.user_id});
-      console.log('Home ', this.state.user_id);
+      showCate: false,      
     }
   }
 
@@ -36,14 +19,13 @@ export default class Home extends Component<any, any> {
     // console.log(this.props.navigation);
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>        
-        <View style={styles.container}>
-          <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />
+        <View style={styles.container}>          
           {/* Top - searching bar */}
           <Searching navigation={this.props.navigation}/>
 
-          <Feature navigation={this.props.navigation} user_id={this.state.user_id}/>  
+          <Feature navigation={this.props.navigation} />  
           {/* Bottome - menu */}
-          <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
+          <MainMenu navigation={this.props.navigation} />
         </View>
       </TouchableWithoutFeedback>
     );

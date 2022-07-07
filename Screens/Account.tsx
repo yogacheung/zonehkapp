@@ -11,7 +11,7 @@ export default class Account extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      user_id: this.props.navigation.state.params==null? this.props.navigation.state.params.user_id : 1,      
+      signIn: false,
       userInfo: null
     }
   }
@@ -24,25 +24,33 @@ export default class Account extends Component<any, any> {
   // Sign out
   onSignOut = () => {
     console.log('sign out');
-    this.setState({user_id: 0, userInfo: null});
+    axios.get(apiserver+'usersignout', {withCredentials: true})
+    .then(res => {
+       console.log(res.data);
+      if(res.data.code === 200) {        
+        this.setState({signIn: false, userInfo: null});
+      }      
+    });
+    
   }
 
   // Fetch user account information
   getUserInfo = () => {    
-    axios.get(apiserver+'getuseraccount/'+this.state.user_id)
+    axios.get(apiserver+'getuseraccount', {withCredentials: true})
     .then(res => {
        console.log(res.data);
-      if(res.data.code === 200) {        
-        this.setState({userInfo: res.data.res[0], isLoading: false});
-      }      
+      if(res.data.code === 200) {
+        this.setState({userInfo: res.data.res[0], signIn: true, isLoading: false});
+      } else if(res.data.code === 300) {
+        this.setState({signIn: false, isLoading: false});
+      }
     });
   }
 
-  componentDidMount() {
-    console.log('Account ', this.state.user_id);
+  componentDidMount() {    
     if(this.state.isLoading){
       this.getUserInfo();
-    }
+    } 
   }
 
   render() {
@@ -58,24 +66,24 @@ export default class Account extends Component<any, any> {
         <ScrollView>
           {/* Welcome and Sign In */}
           <View style={styles.infoContent}>
-            <Text style={styles.textStyle}>Welcome, {this.state.userInfo != null? this.state.userInfo.name: ''}</Text>
+            <Text style={styles.textStyle}>Welcome, {this.state.signIn ? this.state.userInfo.name: ''}</Text>
             {
-              this.state.user_id == 0 ?
+              this.state.signIn ?
+              <Button title="Sign Out?" onPress={this.onSignOut} /> :
               <Button title="Please sign in." onPress={() => this.props.navigation.navigate('UserSignIn')} /> 
-              : <Button title="Sign Out?" onPress={this.onSignOut} />
             }            
           </View>
           
           {/* User information */}                    
           <View style={styles.infoContent}>
-            <Text style={styles.textStyle}>Email: {this.state.userInfo != null? this.state.userInfo.email: ''}</Text>
-            <Text style={styles.textStyle}>Name: {this.state.userInfo != null? this.state.userInfo.name: ''}</Text>
-            <Text style={styles.textStyle}>Phone: {this.state.userInfo != null? this.state.userInfo.phone: ''}</Text>
+            <Text style={styles.textStyle}>Email: {this.state.signIn ? this.state.userInfo.email: ''}</Text>
+            <Text style={styles.textStyle}>Name: {this.state.signIn ? this.state.userInfo.name: ''}</Text>
+            <Text style={styles.textStyle}>Phone: {this.state.signIn ? this.state.userInfo.phone: ''}</Text>
           </View>
             
           {/* Edit button if signed in */}
           {
-            this.state.user_id != 0 ?
+            this.state.signIn ?
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
@@ -89,7 +97,7 @@ export default class Account extends Component<any, any> {
             <Text style={styles.textStyle}>Order History</Text>            
           </View>      
         </ScrollView>        
-        <MainMenu navigation={this.props.navigation} user_id={this.state.user_id}/>
+        <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>           
     );
   }

@@ -38,8 +38,7 @@ export default class Feature extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,      
-      resList: [],
-      user_id: this.props.user_id
+      resList: []      
     }
   } 
 
@@ -47,19 +46,23 @@ export default class Feature extends Component<any, any> {
     this.getFeature();
   }
 
-  getFeature = () => {
-    axios.get(apiserver+'getfeature')
-    .then(res => {
-      console.log(res.data);
-      if(res.data.code === 200) {
-        this.setState({resList: res.data.list, isLoading: false});
-      }
-    });
+  getFeature = async () => {
+    try {
+      await axios.get(apiserver+'getfeature')
+      .then(res => {
+        // console.log(res.data);
+        if(res.data.code === 200) {
+          this.setState({resList: res.data.list, isLoading: false});
+        }
+      });
+    } catch(err) {
+
+    }
+    
   }
   
-  componentDidMount() {
-    console.log('Feature ', this.state.user_id);
-    if(this.state.isLoading) {
+  componentDidMount() {    
+    if(this.state.isLoading) {      
       this.getFeature();
     }
   }
@@ -82,7 +85,7 @@ export default class Feature extends Component<any, any> {
           data = {this.state.resList}          
           renderItem = { ({ item }) =>
             <TouchableOpacity
-              onPress = {() => this.props.navigation.navigate('Product', {product_id: item.id, title: item.title, user_id: this.state.user_id})}
+              onPress = {() => this.props.navigation.navigate('Product', {product_id: item.id, title: item.title})}
             >
               <Item item={item} />
             </TouchableOpacity>

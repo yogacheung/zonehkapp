@@ -19,8 +19,7 @@ export default class UserSignIn extends Component<any, any> {
     super(props);
     this.state = {
       email: '',
-      password: '',
-      user_id: 0,
+      password: '',      
       msg: '',
       expoPushToken: null,
       notification: {},
@@ -87,9 +86,7 @@ export default class UserSignIn extends Component<any, any> {
       .then(function(res) {      
         //  console.log(res.data);
         if(res.data.code === 200){
-          // console.log(self, 'login');     
-          
-          self.setState({user_id: res.data.res[0].user_id});
+          // console.log(self, 'login');          
 
           self.registerForPushNotificationsAsync();
           Notifications.addNotificationReceivedListener(self._handleNotification);
@@ -107,12 +104,12 @@ export default class UserSignIn extends Component<any, any> {
 
   postUserToken = () => {
     var self = this;
-    axios.post(apiserver+ 'userapntoken', {user_id: this.state.user_id, token: this.state.expoPushToken})
+    axios.post(apiserver+ 'userapntoken', {token: this.state.expoPushToken}, {withCredentials: true})
     .then(function(res) {      
       // console.log(res.data);
-      if(res.data.code === 200) {
+      if(res.data.code === 200 || res.data.code === 202) {
         // console.log(res.data.code);        
-        self.props.navigation.navigate('Home', {user_id: self.state.user_id});
+        self.props.navigation.navigate('Home');
       }   
     });
   }
