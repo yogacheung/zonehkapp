@@ -24,16 +24,16 @@ export default class MainMenu extends Component<any, any> {
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
-        {/* Cart button */}
+        {/* Category Filter */}
         <Ionicons style={styles.iconBtn}
-          name='cart-outline'            
-          size={iconWidth}
-          color='black'
-          onPress={() => this.props.navigation.navigate('Cart')} />
-        
+            name='ios-list-circle-outline'
+            size={iconWidth}
+            color='black'
+            onPress={() => this.props.navigation.navigate('Category')} />
+
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
-
+    
         {/* Account button */}
         <FontAwesome style={styles.iconBtn}
           name='user-circle'            
@@ -41,6 +41,16 @@ export default class MainMenu extends Component<any, any> {
           color='balck'
           onPress={() => this.props.navigation.navigate('Account')} />
 
+        {/* Extra space for android */}
+        {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
+
+        {/* Cart button */}
+        <Ionicons style={styles.iconBtn}
+          name='cart-outline'            
+          size={iconWidth}
+          color='black'
+          onPress={() => this.props.navigation.navigate('Cart')} />
+        
         {/* Extra space for android */}
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}
 
@@ -55,11 +65,11 @@ export default class MainMenu extends Component<any, any> {
         {Platform.OS === 'android' ? <View style={{paddingHorizontal: iconPad}}></View> : null}              
 
         {/* Setting button */}
-        <Ionicons style={styles.iconBtn}          
+        {/* <Ionicons style={styles.iconBtn}          
           name='settings-outline'            
           size={iconWidth}
           color='black'
-          onPress={() => this.props.navigation.navigate('Setting')} />
+          onPress={() => this.props.navigation.navigate('Setting')} /> */}
       </View>
     )
   }

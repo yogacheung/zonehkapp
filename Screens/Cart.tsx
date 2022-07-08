@@ -51,6 +51,8 @@ export default class Cart extends Component<any, any> {
       if(res.data.code === 200) {        
         self.setState({resList: res.data.res, isLoading: false});
         self.calTotal();
+      } else if(res.data.code === 301) {        
+        self.setState({isLoading: false});        
       }
     });
   }
@@ -92,15 +94,16 @@ export default class Cart extends Component<any, any> {
 
     return(      
       <SafeAreaView style={styles.container}>
-        <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />              
+        <NavigationEvents onDidFocus={(v) => this.onfresh(v)} />
+
           {/* List all products in cart */}
-          {this.state.resList ?          
+          {this.state.resList.length > 0 ?          
           <FlatList
             showsVerticalScrollIndicator  = {false}
             data = {this.state.resList}          
             renderItem = { ({ item }) =>
               <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Product', {product_id: item.product_id, title: item.title}) }
+                onPress = {() => this.props.navigation.navigate('Product', {product_id: item.product_id, remark: item.remark, title: item.title}) }
               >
                 <View style={styles.item}>    
                   <CachedImage
@@ -110,7 +113,17 @@ export default class Cart extends Component<any, any> {
                   />
                   <View style={styles.itemDetail}>    
                     <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.subtitile}>Price: HK${item.min_price} x {item.qty}</Text>      
+                    <View style={styles.rowStyle}>
+                      <Text style={styles.subtitile}>Price: HK${item.min_price} x </Text>
+                      <View style={{flex:1, alignItems: 'flex-end'}}>
+                        <View style={styles.rowStyle}>                       
+                          <TextInput style={styles.qty} value={item.qty.toString()} underlineColorAndroid='transparent'/>                        
+                        </View>
+                      </View>
+                    </View>
+
+                    
+                    
                     {/* Quantity */}
                     {/* <View style={{flex:1, alignItems: 'flex-end'}}>
                       <View style={styles.rowStyle}>
@@ -128,16 +141,20 @@ export default class Cart extends Component<any, any> {
           />          
           : 
           <View style={styles.item}>
-            <Text style={styles.title}>No prodcut.</Text>
+            <View style={styles.itemDetail}>    
+              <Text style={styles.cartTitle}>Empty cart</Text>
+            </View>            
           </View>
           }
-
+          
+          
           {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}
           <View style={styles.totalContent}>            
             <Text style={styles.totalStyle}>Total: ${this.state.total}</Text>
             <Text style={styles.totalStyle}>Checkout</Text>            
           </View>
             
+          <View style={{paddingVertical: wWidth/25}}></View>  
           <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>                  
     );
@@ -199,19 +216,22 @@ const styles = StyleSheet.create({
     }
   },
   title: {
-    fontSize: wWidth*0.03,
+    fontSize: wWidth*0.05,
     width: wWidth*0.65,
     fontWeight: 'bold',
   },
   subtitile: {
-    fontSize: wWidth*0.04,
+    fontSize: wWidth*0.05,
+  },
+  cartTitle: {
+    fontSize: wWidth*0.05,
   },
   rowStyle: {
     flex: 1,
     flexDirection: 'row',
   },  
   qty: {     
-    width: wWidth*0.2,
+    width: wWidth*0.15,
     color: '#000000',    
     textAlign: 'center',
     marginHorizontal: 5,

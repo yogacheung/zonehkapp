@@ -32,25 +32,38 @@ const AppNavigator = createStackNavigator(
       }),
     },
     Category: {
-      screen: Category
+      screen: Category,
+      navigationOptions: {headerLeft: ()=> null}
     },
     Account: {
-      screen: Account      
+      screen: Account,
+      navigationOptions: {headerLeft: ()=> null}
     },
     Cart: {
-      screen: Cart
+      screen: Cart,
+      navigationOptions: {headerLeft: ()=> null}
     },
     UserSignIn: {
-      screen: UserSignIn      
+      screen: UserSignIn,
+      navigationOptions: {
+        title: 'Sign In',
+      }
     },
     UserSignUp: {
-      screen: UserSignUp  
+      screen: UserSignUp,
+      navigationOptions: {
+        title: 'Sign Up',
+      }
     },
     Message: {
       screen: Message
     },
     MessageList: {
-      screen: MessageList
+      screen: MessageList,
+      navigationOptions: {
+        title: 'Message List',
+        headerLeft: ()=> null
+      }
     },
     Setting: {
       screen: Setting

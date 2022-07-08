@@ -12,9 +12,10 @@ export default class Product extends Component<any, any> {
     super(props);
     this.state = {
       isLoading: true,
-      product_id: this.props.navigation.state.params.product_id,      
+      product_id: this.props.navigation.state.params.product_id,
       info: null,
       qty: 1,
+      remark: this.props.navigation.state.params.remark ? this.props.navigation.state.params.remark : '',
       msg: ''
     }    
   }
@@ -37,11 +38,17 @@ export default class Product extends Component<any, any> {
     }    
   }
 
+  updateRemark = (remark: string) => {
+    if(this.state.remark != remark) {
+      this.setState({remark: remark});
+    }
+  }
+
   addToCart = () => {
     var self = this;
-    axios.post(apiserver+'addtocart', {product_id: this.state.product_id, qty: this.state.qty})
+    axios.post(apiserver+'addtocart', {product_id: this.state.product_id, qty: this.state.qty, remark: this.state.remark})
     .then(res => {
-       console.log(res.data);      
+      // console.log(res.data);      
       if(res.data.code === 200) {            
         // console.log(this.state);  
         Alert.alert('Add To Cart', 'Added. Go to Cart?', [
@@ -93,7 +100,8 @@ export default class Product extends Component<any, any> {
               <Text style={styles.title}>{this.state.info.content}</Text>
             </ScrollView>
 
-            
+            <Text style={styles.title}>Remark:</Text>
+            <TextInput style={styles.remarkStyle} placeholder="Content on product" value={this.state.remark} underlineColorAndroid='transparent' onChangeText={this.updateRemark}/>
 
             {/* Add To Cart Button */}
             <TouchableOpacity
@@ -104,7 +112,8 @@ export default class Product extends Component<any, any> {
               <Text style={styles.buttonTextStyle}>Add To Cart</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>        
+        </ScrollView>
+        
         <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>
     );
@@ -177,8 +186,8 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',    
     alignItems: 'center',
     borderRadius: 15,    
-    marginVertical: 10,
-    marginBottom: 50,
+    marginVertical: 20,
+    marginBottom: 20,
   },
   buttonTextStyle: {
     color: '#000000',    
@@ -187,14 +196,28 @@ const styles = StyleSheet.create({
   rowStyle: {
     flex: 1,
     flexDirection: 'row',
-  },
-  datePicker: {
-    flex: 1
   },  
   textStyle: {
     fontSize: wWidth*0.05,
     fontWeight: "bold",
     textAlign: "center",
     paddingTop: 20
+  },
+  remarkStyle: {    
+    width: wWidth*0.88,
+    height: wHeight*0.1,
+    color: '#000',    
+    textAlign: 'left',    
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderRadius: 15,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    },
+    margin: 5,
   },
 });

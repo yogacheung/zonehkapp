@@ -67,7 +67,7 @@ export default class Message extends Component<any, any> {
     });
   }
 
-  updateInputMsg = (msg:any) => {
+  updateInputMsg = (msg:string) => {
     this.setState({msgchat: msg});
   }
 

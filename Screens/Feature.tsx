@@ -93,7 +93,8 @@ export default class Feature extends Component<any, any> {
           keyExtractor={item => item.id.toString()}         
         />
         : null}
-        {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}        
+        {Platform.OS === 'android' ? <View style={{paddingVertical: wWidth/25}}></View> : null}
+        <View style={{paddingVertical: wWidth/25}}></View>
       </SafeAreaView>
     );
   }

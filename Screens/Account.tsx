@@ -38,7 +38,7 @@ export default class Account extends Component<any, any> {
   getUserInfo = () => {    
     axios.get(apiserver+'getuseraccount', {withCredentials: true})
     .then(res => {
-       console.log(res.data);
+      // console.log(res.data);
       if(res.data.code === 200) {
         this.setState({userInfo: res.data.res[0], signIn: true, isLoading: false});
       } else if(res.data.code === 300) {
@@ -96,7 +96,9 @@ export default class Account extends Component<any, any> {
           <View style={styles.infoContent}>
             <Text style={styles.textStyle}>Order History</Text>            
           </View>      
-        </ScrollView>        
+        </ScrollView>
+
+        <View style={{paddingVertical: wWidth/25}}></View>
         <MainMenu navigation={this.props.navigation} />
       </SafeAreaView>           
     );

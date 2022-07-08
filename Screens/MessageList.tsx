@@ -49,7 +49,10 @@ export default class MessageList extends Component<any, any> {
       // console.log(res.data);
       if(res.data.code === 200){
         this.setState({recevierList: res.data.res, isLoading: false});
-      } else this.requireSignIn();     
+      } else {
+        this.setState({isLoading: false});
+        this.requireSignIn();
+      }
     });
   }
 
@@ -88,8 +91,8 @@ export default class MessageList extends Component<any, any> {
             >
               <View style={styles.item}>        
                 <View style={styles.itemDetail}>    
-                <Text style={styles.title}>Customer Service</Text>
-                </View>    
+                  <Text style={styles.title}>Customer Service</Text>
+                </View>
               </View> 
             </TouchableOpacity>
             : null

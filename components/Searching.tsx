@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Platform, StyleSheet, View, Ionicons, FontAwesome, MaterialCommunityIcons, wWidth, wHeight, barTop, iconPad, btmLocat, iconWidth } from "../GlobalVar";
 import { TextInput, StatusBar, Dimensions } from 'react-native';
-import Category from '../Screens/Category';
 
 // Searching Component
 export default class Searching extends Component<any, any> {
@@ -39,14 +38,7 @@ export default class Searching extends Component<any, any> {
           type='font-awesome'
           size={wWidth/15}      
           onPress={() => this.props.navigation.navigate('SearchResult', {searchKey: search.searchKey, searchZip: search.searchZip})} /> */}
-                
-        {/* Category Filter */}
-        <Ionicons style={styles.iconBtn}
-            name='options-outline'            
-            size={iconWidth}
-            color='black'
-            onPress={() => this.props.navigation.navigate('Category')} />
-                      
+                                     
       </View>
     );
   }

@@ -1,48 +1,23 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, ScrollView, TouchableOpacity, StyleSheet, Text, TouchableHighlightBase } from 'react-native';
+import { SafeAreaView, View, FlatList, TouchableOpacity, StyleSheet, Text, TouchableHighlightBase } from 'react-native';
 import axios from 'axios';
 import { apiserver, wWidth, wHeight } from '../GlobalVar';
-import Checkbox from 'expo-checkbox';
+import MainMenu from '../components/MainMenu';
+
+const Item = ({ cate }:any) => (
+  <View style={styles.item}>        
+    <View style={styles.itemDetail}>    
+    <Text style={styles.title}>{cate.name}</Text>    
+    </View>    
+  </View>
+);
 
 export default class Category extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
       isLoading: true,      
-      catelist: [],
-      checkedList: [],
-    }
-  }
-
-  updateCheckedList = () => {
-    this.setState({checkedList: []});
-  }
-
-  updateIsChecked = (i: number, v: any) => {
-    // console.log(i, v);
-    let cate = this.state.catelist[i];    
-    cate.checked = v;
-    // console.log(cate);
-    this.state.catelist[i] = cate;
-    // console.log(this.state.catelist[i]);
-    // this.categoryList();
-    // console.log(this.state.catelist);
-  }
-
-  categoryList = () => {
-    if(this.state.catelist) {
-      return this.state.catelist.map((cate: any, i: number) => {                  
-        return (
-          <View style={styles.section} key={i}>
-            <Checkbox               
-              style={styles.checkbox}
-              value={Boolean(cate.checked)}
-              onValueChange={(v) => this.updateIsChecked(i,v)}              
-            />           
-            <Text style={styles.textStyle}>{cate.name}</Text>
-          </View>
-        );
-      });
+      catelist: []      
     }
   }
 
@@ -51,7 +26,7 @@ export default class Category extends Component<any, any> {
     .then(res => {
       // console.log(res);
       if(res.data.code === 200) {
-        console.log(res.data.list);
+        // console.log(res.data);
         this.setState({catelist: res.data.list});
       }
     });
@@ -66,18 +41,22 @@ export default class Category extends Component<any, any> {
 
   render() {  
     return(      
-      <View style={styles.container}>                          
-        <ScrollView>
-          {this.categoryList()}
+      <SafeAreaView style={styles.container}>
+        <FlatList 
+          data = {this.state.catelist} 
+          renderItem = { ({ item }) =>
+            <TouchableOpacity
+              onPress = {() => this.props.navigation.navigate('Home')}
+            >
+              <Item cate={item} />
+            </TouchableOpacity>
+          }
+          keyExtractor={item => item.category_id.toString()}         
+        />
 
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={() => this.props.navigation.navigate('Home')}>
-            <Text style={styles.buttonTextStyle}>Filter</Text>
-          </TouchableOpacity>
-          </ScrollView>
-      </View>
+        <View style={{paddingVertical: wWidth/25}}></View>
+        <MainMenu navigation={this.props.navigation} />          
+      </SafeAreaView>
     )
   }
 }
@@ -87,6 +66,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  infoContent: {
+    backgroundColor: '#fcfcfc',
+    padding: 10,
+    margin: 10,    
+    borderRadius: 10,  
+  },
+  item: {
+    backgroundColor: '#fcfcfc',
+    padding: 5,
+    margin: 5,
+    flexDirection: 'row',
+    borderColor: 'gray',    
+    borderRadius: 10,
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 1,
+      width: 1
+    }
+  },
+  itemDetail: {    
+    padding: 5,
+    margin: 5,  
+  },
   title: {    
     fontSize: wWidth*0.05,
     padding: 5,
@@ -95,18 +99,7 @@ const styles = StyleSheet.create({
     fontSize: wWidth*0.05,    
     textAlign: "center",
     padding: 5
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  paragraph: {
-    fontSize: 15,
-    width: wWidth*0.25,
-  },
-  checkbox: {
-    margin: 8,
-  },
+  },   
   buttonStyle: {    
     backgroundColor: '#fcfcfc',
     borderWidth: 1,
